@@ -13,6 +13,7 @@ pipeline {
         stage('Unit') {
           steps {
             echo 'Unit Test'
+            unstash(name: 'jar')
             bat 'mvn clean test'
           }
         }
