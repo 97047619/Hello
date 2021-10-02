@@ -12,14 +12,14 @@ pipeline {
       parallel {
         stage('Unit') {
           steps {
-            echo 'Unit'
-            bat 'mvn clean'
+            echo 'Unit Test'
+            bat 'mvn clean test'
           }
         }
 
         stage('Performance') {
           steps {
-            echo 'Performance'
+            echo 'Performance Test'
             unstash(name: 'jar')
             bat 'mvn clean test'
           }
