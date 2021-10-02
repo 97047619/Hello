@@ -10,7 +10,7 @@ pipeline {
       //}
       steps {
         bat 'mvn -B -DskipTests clean package'
-        stash name: 'jar', includes: 'target/**
+        //stash name: 'jar', includes: 'target/**
       }
     }
 
