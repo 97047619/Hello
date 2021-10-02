@@ -20,7 +20,8 @@ pipeline {
         stage('Performance') {
           steps {
             echo 'Performance'
-            bat 'mvn clean'
+            unstash(name: 'jar')
+            bat 'mvn test'
           }
         }
 
