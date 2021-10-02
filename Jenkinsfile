@@ -12,12 +12,14 @@ pipeline {
         stage('Unit') {
           steps {
             echo 'Unit'
+            sh 'mvn clean'
           }
         }
 
         stage('Performance') {
           steps {
             echo 'Performance'
+            sh 'mvn clean'
           }
         }
 
