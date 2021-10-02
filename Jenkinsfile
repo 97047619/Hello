@@ -20,8 +20,8 @@ pipeline {
         stage('Performance') {
           steps {
             echo 'Performance'
-            unstash(name: 'jar', includes: 'target/**')
-            bat 'mvn test'
+            unstash(name: 'jar')
+            bat 'mvn clean test'
           }
         }
 
