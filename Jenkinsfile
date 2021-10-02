@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        bat 'mvn clean'
+        bat 'mvn -B -DskipTests clean package'
       }
     }
 
@@ -12,14 +12,14 @@ pipeline {
         stage('Unit') {
           steps {
             echo 'Unit'
-            sh 'mvn clean'
+            bat 'mvn clean'
           }
         }
 
         stage('Performance') {
           steps {
             echo 'Performance'
-            sh 'mvn clean'
+            bat 'mvn clean'
           }
         }
 
