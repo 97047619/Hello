@@ -87,7 +87,7 @@ pipeline {
       when {
         anyOf {
         branch 'develop'
-        expression {BRANCH_NAME ==~ /release\/.*/}
+        expression {BRANCH_NAME ==~ /SNAPSHOT\/.*/}
         }
       }
       steps {
