@@ -1,7 +1,7 @@
 def version
 node {
        // Icheckout the repo
-       checkout scm
+       //checkout scm
        version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
        
       /*
