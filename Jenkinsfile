@@ -66,7 +66,7 @@ pipeline {
     stage('Deploy to QA') {
       when {
         branch 'main'
-        expression {BRANCH_NAME ==~ /release\/.*/}
+        //expression {BRANCH_NAME ==~ /release\/.*/}
       }
       steps {
         echo 'Deploy to Staging'
@@ -89,7 +89,7 @@ pipeline {
         input message: 'Deploy to Production?',
         ok: 'Fire away!'
         //sh './deploy.sh production'
-        bat 'deploy.bat staging'
+        bat 'deploy.bat production'
         echo 'Notifying the team...'
       }
     }
