@@ -15,7 +15,7 @@ pipeline {
             echo 'Unit Test'
             // commenting out this next line will make it fail when using mvn clean test
             //unstash(name: 'jar')
-            bat 'mvn -B clean test'
+            bat 'mvn -B test'
             junit '**/surefire-reports/**/*.xml'
           }
         }
@@ -24,7 +24,7 @@ pipeline {
           steps {
             echo 'Performance Test'
             unstash(name: 'jar')
-            bat 'mvn clean test'
+            bat 'mvn test'
           }
         }
 
@@ -52,6 +52,7 @@ pipeline {
   }
   post {
         always {
+            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
             junit 'target/surefire-reports/**/*.xml'
         }
     }
