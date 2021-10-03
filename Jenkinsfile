@@ -87,7 +87,7 @@ pipeline {
       steps {
         echo 'Deploy to Production'
         input message: 'Deploy to Production?',
-        ok: 'Fire away!'
+        ok: 'Yes'
         //sh './deploy.sh production'
         bat 'deploy.bat production'
         echo 'Notifying the team...'
