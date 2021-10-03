@@ -22,7 +22,7 @@ pipeline {
       //}
       //}
        steps {
-         parallel ()
+         parallel (
           'Unit': {
             echo 'Unit Test'
             // commenting out this next line will make it fail when using mvn clean test
