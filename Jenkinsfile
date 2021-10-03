@@ -13,8 +13,9 @@ pipeline {
         stage('Unit') {
           steps {
             echo 'Unit Test'
-            unstash(name: 'jar')
-            bat 'mvn clean test'
+            // commenting out this next line will make it fail
+            //unstash(name: 'jar')
+            bat 'mvn test'
           }
         }
 
