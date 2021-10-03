@@ -2,6 +2,12 @@ pipeline {
   agent any
   stages {
     stage('Build') {
+      //agent {
+      //  docker {
+      //    image 'maven:3.8.1-adoptopenjdk-11'
+      //    args '-v /root/.m2:/root/.m2'
+      //}
+      //}
       steps {
         bat 'mvn -B -DskipTests clean package'
         stash(name: 'jar', includes: 'target/**')
@@ -9,26 +15,29 @@ pipeline {
     }
 
     stage('Backend') {
-      parallel {
-        stage('Unit') {
-          steps {
+      //agent {
+      //  docker {
+      //    image 'maven:3.8.1-adoptopenjdk-11'
+      //    args '-v /root/.m2:/root/.m2'
+      //}
+      //}
+       steps {
+         parallel ()
+          'Unit': {
             echo 'Unit Test'
             // commenting out this next line will make it fail when using mvn clean test
-            //unstash(name: 'jar')
-            bat 'mvn -B test'
-            junit '**/surefire-reports/**/*.xml'
-          }
-        }
-
-        stage('Performance') {
-          steps {
-            echo 'Performance Test'
             unstash(name: 'jar')
-            bat 'mvn test'
-          }
-        }
-
-      }
+            bat 'mvn -B -DtestFailureIgnore test || exit 0'
+            junit '**/surefire-reports/**/*.xml'
+          },
+          'Performance': {
+            echo 'Performance Test'
+            // commenting out this next line will make it fail when using mvn clean test
+            unstash(name: 'jar')
+            bat 'mvn -B -DtestFailureIgnore test || exit 0'
+            junit '**/surefire-reports/**/*.xml'
+            })
+       }
     }
 
     stage('Frontend') {
@@ -52,7 +61,7 @@ pipeline {
   }
   post {
         always {
-            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '**/*.jar', fingerprint: true
             junit 'target/surefire-reports/**/*.xml'
         }
     }
