@@ -9,7 +9,6 @@ node {
         version = readMavenPom().getVersion().replace("-SNAPSHOT", "")
        */
     }
-}
 
 pipeline {
   agent any
