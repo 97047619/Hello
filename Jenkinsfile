@@ -45,9 +45,9 @@ pipeline {
       steps {
         echo 'Frontend'
         bat 'node --version'
-        bat 'yarn install'
-        bat 'yarn global add gulp-cli'
-        bat 'gulp test'
+        //bat 'yarn install'
+        //bat 'yarn global add gulp-cli'
+        //bat 'gulp test'
       }
     }
 
