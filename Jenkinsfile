@@ -34,15 +34,19 @@ pipeline {
             echo 'Performance Test'
             // commenting out this next line will make it fail when using mvn clean test
             unstash(name: 'jar')
-            bat 'mvn -B -DtestFailureIgnore test || exit 0'
-            junit '**/surefire-reports/**/*.xml'
+            //bat 'mvn -B -DtestFailureIgnore test || exit 0'
+            //sh '# ./mvn -B gatling:execute'
             })
        }
     }
 
     stage('Frontend') {
+      agent {docker 'node:alpine'}
       steps {
         echo 'Frontend'
+        bat 'yarn install'
+        bat 'yarn global add gulp-cli'
+        bat 'gulp test'
       }
     }
 
