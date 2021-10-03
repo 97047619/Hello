@@ -1,5 +1,15 @@
 pipeline {
   agent any
+  environment {
+    REVISION = "0.0.${env.BUILD_ID}"
+  }
+  triggers {
+    pollSCM('')
+  }
+  options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '30'))
+  }
   stages {
     stage('Build') {
       //agent {
@@ -63,10 +73,12 @@ pipeline {
       }
     }
 
-    stage('Deploy to QA') {
+    stage('Deploy to Staging') {
       when {
-        branch 'main'
-        //expression {BRANCH_NAME ==~ /release\/.*/}
+        anyOf {
+        branch 'develop'
+        expression {BRANCH_NAME ==~ /release\/.*/}
+        }
       }
       steps {
         echo 'Deploy to Staging'
@@ -78,11 +90,7 @@ pipeline {
 
     stage('Deploy to Production') {
       when {
-        anyOf {
-          branch 'main'
-          branch 'production'
-        }
-        
+         branch 'develop'
       }
       steps {
         echo 'Deploy to Production'
