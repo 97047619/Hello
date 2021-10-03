@@ -70,7 +70,8 @@ pipeline {
       }
       steps {
         echo 'Deploy to Staging'
-        bat './deploy.sh staging'
+        //sh './deploy.sh staging'
+        bat 'deploy.bat staging'
         echo 'Notifying the team...'
       }
     }
@@ -87,7 +88,8 @@ pipeline {
         echo 'Deploy to Production'
         input message: 'Deploy to Production?',
         ok: 'Fire away!'
-        bat './deploy.sh production'
+        //sh './deploy.sh production'
+        bat 'deploy.bat staging'
         echo 'Notifying the team...'
       }
     }
