@@ -44,6 +44,7 @@ pipeline {
       agent {docker 'node:alpine'}
       steps {
         echo 'Frontend'
+        bat 'node --version'
         bat 'yarn install'
         bat 'yarn global add gulp-cli'
         bat 'gulp test'
@@ -56,11 +57,41 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Build Container') {
       steps {
-        echo 'Deploy'
+        echo 'Build Container'
       }
     }
+
+    stage('Deploy to QA') {
+      when {
+        branch 'main'
+        expression {BRANCH_NAME ==~ /release\/.*/}
+      }
+      steps {
+        echo 'Deploy to Staging'
+        bat './deploy.sh staging'
+        echo 'Notifying the team...'
+      }
+    }
+
+    stage('Deploy to Production') {
+      when {
+        anyOf {
+          branch 'main'
+          branch 'production'
+        }
+        
+      }
+      steps {
+        echo 'Deploy to Production'
+        input message: 'Deploy to Production?',
+        ok: 'Fire away!'
+        bat './deploy.sh production'
+        echo 'Notifying the team...'
+      }
+    }
+
 
   }
   post {
