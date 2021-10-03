@@ -41,7 +41,7 @@ pipeline {
     }
 
     stage('Frontend') {
-      agent {docker 'node:alpine'}
+      //agent {docker 'node:alpine'}
       steps {
         echo 'Frontend'
         bat 'node --version'
