@@ -1,16 +1,27 @@
+def version
+node {
+       // Icheckout the repo
+       checkout scm
+       version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+       
+      /*
+        //or read value from pom file, if you have youe own buildIn method
+        version = readMavenPom().getVersion().replace("-SNAPSHOT", "")
+       */
+    }
+}
+
 pipeline {
   agent any
-  environment {
-    REVISION = "0.0.${env.BUILD_ID}"
-  }
-  triggers {
-    pollSCM('')
-  }
-  options {
-    disableConcurrentBuilds()
-    buildDiscarder(logRotator(numToKeepStr: '30'))
-  }
+  parameters {
+        string(name: 'VERSION', defaultValue: version, description: 'Current POM version')
+    }
   stages {
+    stage('1') {
+            steps {
+                echo "Params : ${params}"
+            }
+    }
     stage('Build') {
       //agent {
       //  docker {
@@ -83,6 +94,7 @@ pipeline {
       steps {
         echo 'Deploy to Staging'
         //sh './deploy.sh staging'
+        bat 'deploy scm:tag -Drevision=$BUILD_NUMBER'
         bat 'deploy.bat staging'
         echo 'Notifying the team...'
       }
