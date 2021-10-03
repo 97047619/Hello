@@ -87,13 +87,14 @@ pipeline {
       when {
         anyOf {
         branch 'develop'
-        expression {VERSION ==~ /SNAPSHOT\/.*/}
+        //expression {VERSION ==~ /SNAPSHOT\/.*/}
+         expression { params.VERSION == 'SNAPSHOT' }
         }
       }
       steps {
         echo 'Deploy to Staging'
         //sh './deploy.sh staging'
-        bat 'deploy scm:tag -Drevision=$BUILD_NUMBER'
+        //bat 'deploy scm:tag -Drevision=$BUILD_NUMBER'
         bat 'deploy.bat staging'
         echo 'Notifying the team...'
       }
