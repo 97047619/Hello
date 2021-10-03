@@ -2,7 +2,7 @@ def version
 node {
        // Icheckout the repo
        //checkout scm
-       version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+       version = bat script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
        
       /*
         //or read value from pom file, if you have youe own buildIn method
