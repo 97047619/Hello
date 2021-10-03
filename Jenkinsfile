@@ -15,7 +15,8 @@ pipeline {
             echo 'Unit Test'
             // commenting out this next line will make it fail when using mvn clean test
             //unstash(name: 'jar')
-            bat 'mvn clean test'
+            bat 'mvn -B clean test'
+            junit '**/surefire-reports/**/*.xml'
           }
         }
 
