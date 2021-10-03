@@ -77,10 +77,14 @@ pipeline {
       }
     }
 
-    stage('Build Container') {
-      steps {
-        echo 'Build Container'
-      }
+   stage('Deliver for development') {
+     when {
+       expression { BRANCH_NAME ==~ /(develop|feature)/ }
+       }
+       steps {
+         //sh './jenkins/scripts/deliver-for-development.sh'
+         echo 'Deliver for development'
+       }
     }
 
     stage('Deploy to Staging') {
