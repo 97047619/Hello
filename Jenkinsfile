@@ -1,13 +1,6 @@
 def version
 node {
-       // Icheckout the repo
-       //checkout scm
        version = bat script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
-       
-      /*
-        //or read value from pom file, if you have youe own buildIn method
-        version = readMavenPom().getVersion().replace("-SNAPSHOT", "")
-       */
     }
 
 pipeline {
@@ -55,7 +48,7 @@ pipeline {
             // commenting out this next line will make it fail when using mvn clean test
             unstash(name: 'jar')
             //bat 'mvn -B -DtestFailureIgnore test || exit 0'
-            //sh '# ./mvn -B gatling:execute'
+            //bat '# ./mvn -B gatling:execute'
             })
        }
     }
@@ -77,13 +70,17 @@ pipeline {
       }
     }
 
-   stage('Deliver for development') {
+   stage('Deliver to Development') {
      when {
-       expression { BRANCH_NAME ==~ /(develop|feature)/ }
+       anyOf {
+         branch 'develop'
+         branch 'feature'
+         branch 'release'
        }
+     }
        steps {
-         //sh './jenkins/scripts/deliver-for-development.sh'
-         echo 'Deliver for development'
+         //sh './jenkins/scripts/deliver-to-development.sh'
+         echo 'Deliver to development'
        }
     }
 
@@ -92,7 +89,7 @@ pipeline {
         anyOf {
         branch 'develop'
         //expression {VERSION ==~ /SNAPSHOT\/.*/}
-         expression { params.VERSION == 'SNAPSHOT' }
+        expression { params.VERSION == 'SNAPSHOT' }
         }
       }
       steps {
@@ -106,7 +103,7 @@ pipeline {
 
     stage('Deploy to Production') {
       when {
-         branch 'develop'
+        expression { params.VERSION == 'RELEASE' }
       }
       steps {
         echo 'Deploy to Production'
@@ -118,12 +115,25 @@ pipeline {
       }
     }
 
-
   }
   post {
         always {
+            echo 'This will always run'
             archiveArtifacts artifacts: '**/*.jar', fingerprint: true
             junit 'target/surefire-reports/**/*.xml'
+        }
+        success {
+            echo 'This will run only if successful'
+        }
+        failure {
+            echo 'This will run only if failed'
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+        }
+        changed {
+            echo 'This will run only if the state of the Pipeline has changed'
+            echo 'For example, if the Pipeline was previously failing but is now successful'
         }
     }
 }
