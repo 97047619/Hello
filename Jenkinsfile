@@ -44,11 +44,15 @@ pipeline {
             junit '**/surefire-reports/**/*.xml'
           },
           'Performance': {
-            echo 'Performance Test'
-            // commenting out this next line will make it fail when using mvn clean test
-            unstash(name: 'jar')
-            //bat 'mvn -B -DtestFailureIgnore test || exit 0'
-            //bat '# ./mvn -B gatling:execute'
+            try {
+              echo 'Performance Test'
+              // commenting out this next line will make it fail when using mvn clean test - for testing fail scenario
+              unstash(name: 'jar')
+              //bat 'mvn -B -DtestFailureIgnore test || exit 0'
+              //bat '# ./mvn -B gatling:execute'
+            } catch (Exception err) {
+              unstable 'Performance tests failed'
+            }
             })
        }
     }
@@ -87,7 +91,7 @@ pipeline {
     stage('Deploy to Staging') {
       when {
         anyOf {
-        branch 'develop'
+        branch 'release'
         //expression {VERSION ==~ /SNAPSHOT\/.*/}
         expression { params.VERSION == 'SNAPSHOT' }
         }
